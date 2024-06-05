@@ -3,6 +3,7 @@ from datetime import datetime
 import glob, os
 from scraper import Scraper
 from concurrent.futures import ThreadPoolExecutor, as_completed
+import asyncio
 
 def scrape_url(url):
     try:
@@ -34,7 +35,7 @@ def scrape_url(url):
         print(f"Error processing {url}: {e}")
         return None
 
-def get_texts():
+async def get_texts():
     csvs = sorted(glob.glob('*_headlines.csv'), key=os.path.getctime, reverse=True)
     df = pd.read_csv(csvs[0])
 
@@ -42,13 +43,13 @@ def get_texts():
     num_threads = 10
 
     with ThreadPoolExecutor(max_workers=num_threads) as executor:
-        future_to_url = {executor.submit(scrape_url, url): url for url in df['url']}
-        for i, future in enumerate(as_completed(future_to_url)):
+        loop = asyncio.get_event_loop()
+        futures = [loop.run_in_executor(executor, scrape_url, url) for url in df['url']]
+        for i, future in enumerate(await asyncio.gather(*futures)):
             if i % 10 == 0:
                 print(f'{round(i/len(df)*100)}% done.')
-            result = future.result()
-            if result:
-                all_values.append(result)
+            if future:
+                all_values.append(future)
 
     # Create a DataFrame and save it to a CSV
     columns = ['Title', 'Domain', 'Description', 'Text', 'Image', 'WordCount', 'URL']
@@ -57,4 +58,4 @@ def get_texts():
     result_df.to_csv(f'{formatted_date}_texts.csv', index=False)
 
 if __name__ == "__main__":
-    get_texts()
+    asyncio.run(get_texts())

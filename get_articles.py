@@ -4,8 +4,9 @@ from datetime import datetime
 import time
 import os
 from dotenv import load_dotenv
+import asyncio
 
-def newsapi_search_news(query, api_key):
+async def newsapi_search_news(query, api_key):
     url = f'https://newsapi.org/v2/everything?q={query}&apiKey={api_key}&pageSize=10'
     response = requests.get(url)
     news_results = response.json()
@@ -20,7 +21,7 @@ def remove_duplicates_by_title(articles):
             unique_articles.append(article)
     return unique_articles
 
-def get_articles():
+async def get_articles():
     load_dotenv()
 
     api_key = os.getenv('NEWS_API_KEY')
@@ -41,11 +42,11 @@ def get_articles():
 
     all_articles = []
 
-    for i,query in enumerate(queries):
+    for i, query in enumerate(queries):
         if i % 5 == 0:
             print(f'{i/len(queries)} % done.')
-        time.sleep(1)  # Pause for 1 second between queries
-        articles = newsapi_search_news(query, api_key)
+        await asyncio.sleep(1)  # Pause for 1 second between queries
+        articles = await newsapi_search_news(query, api_key)
         for article in articles:
             article['query'] = query
         all_articles.extend(articles)
@@ -59,6 +60,4 @@ def get_articles():
     return df
 
 if __name__ == "__main__":
-    df = get_articles()
-
-    print(df.head())
+    asyncio.run(get_articles())
