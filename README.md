@@ -16,7 +16,7 @@ This repository contains scripts for scraping news articles and their content, p
 
 ```sh
 git clone https://github.com/maxemileffort/newsletter_builder.git
-cd newsscraper
+cd newsletter_builder
 ```
 
 2. Install the required packages:
