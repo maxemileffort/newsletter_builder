@@ -6,8 +6,8 @@ This repository contains scripts for scraping news articles and their content, p
 ## Requirements
 
 - Python 3.x
-- Required Python packages: `requests`, `pandas`, `python-dotenv`, `concurrent.futures`
 - NewsAPI key
+- OpenAI key
 - Custom scraper module (`scraper.py`)
 
 ## Setup
@@ -15,14 +15,14 @@ This repository contains scripts for scraping news articles and their content, p
 1. Clone the repository:
 
 ```sh
-git clone https://github.com/yourusername/newsscraper.git
+git clone https://github.com/maxemileffort/newsletter_builder.git
 cd newsscraper
 ```
 
 2. Install the required packages:
 
 ```sh
-pip install requests pandas python-dotenv
+pip install -r requirements.txt
 ```
 
 3. Set up your environment variables:
