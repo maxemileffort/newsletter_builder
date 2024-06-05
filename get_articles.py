@@ -3,9 +3,7 @@ import pandas as pd
 from datetime import datetime
 import time
 import os
-import json, sys
 from dotenv import load_dotenv
-from scraper import Scraper
 
 def newsapi_search_news(query, api_key):
     url = f'https://newsapi.org/v2/everything?q={query}&apiKey={api_key}&pageSize=10'

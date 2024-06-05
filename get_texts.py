@@ -1,10 +1,6 @@
-import requests
 import pandas as pd
 from datetime import datetime
-import time
 import glob, os
-import json, sys
-from dotenv import load_dotenv
 from scraper import Scraper
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
