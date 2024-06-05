@@ -1,21 +1,16 @@
-import requests
-import pandas as pd
-from datetime import datetime
 import time
-import glob, os
-import json, sys
-from dotenv import load_dotenv
-from scraper import Scraper
+from get_articles import get_articles
+from get_texts import get_texts
 
 
 
 def main():
-    
-    time.sleep(1)
+    # this needs to work async
+    get_articles()
+    get_texts()
+    # time.sleep(1)
 
    
 
 if __name__ == "__main__":
     main()
-
-    
