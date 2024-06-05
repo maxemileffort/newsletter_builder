@@ -27,13 +27,14 @@ pip install requests pandas python-dotenv
 
 3. Set up your environment variables:
 
-Create a `.env` file in the root directory of the repository and add your NewsAPI key:
+Create a `.env` file in the root directory of the repository and add your API keys:
 
 ```env
 NEWS_API_KEY=your_newsapi_key
+OPENAI_KEY=your_openai_api_key
 ```
 
-Get your API key [here](https://newsapi.org/).
+Get your News API key [here](https://newsapi.org/).
 
 4. Ensure the `scraper.py` module is in the same directory as the other scripts. This module should contain the custom `Scraper` class used for extracting article content.
 
