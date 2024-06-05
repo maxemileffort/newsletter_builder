@@ -35,6 +35,7 @@ OPENAI_KEY=your_openai_api_key
 ```
 
 Get your News API key [here](https://newsapi.org/).
+Get your OpenAI key [here](https://platform.openai.com/).
 
 4. Ensure the `scraper.py` module is in the same directory as the other scripts. This module should contain the custom `Scraper` class used for extracting article content.
 
