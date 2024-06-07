@@ -6,22 +6,30 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 import asyncio
 
 def scrape_url(url):
+    url_pre_transform = url # storing the raw url passed in
+    auto_browse_links = []
     try:
         base_scrape = Scraper.transform_url(url)
         if isinstance(base_scrape, list):
-            print(url)
-            return None
+            print("list issue corrected url:", url)
+            print("list issue actual url:", url_pre_transform)
+            auto_browse_links.append(url_pre_transform)
+            # return None
 
         if base_scrape.check_if_pdf():
-            print(url)
+            print("pdf issue:", url)
             return None
 
-        base_scrape.useragent_generator()
-        base_scrape.build_headers()
-        base_scrape.get_domain()
-        base_scrape.get_reading_data()
-        base_scrape.get_title()
-        base_scrape.get_word_count()
+        if len(auto_browse_links) == 0:
+            base_scrape.useragent_generator()
+            base_scrape.build_headers()
+            base_scrape.get_domain()
+            base_scrape.get_reading_data()
+            base_scrape.get_title()
+            base_scrape.get_word_count()
+
+        elif len(auto_browse_links) != 0:
+            base_scrape.auto_browser()
         
         if not isinstance(base_scrape.reading, str):
             text = base_scrape.reading.cleaned_text

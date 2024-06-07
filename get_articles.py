@@ -44,7 +44,7 @@ async def get_articles():
 
     for i, query in enumerate(queries):
         if i % 5 == 0:
-            print(f'{i/len(queries)} % done.')
+            print(f'{round(i/len(queries)*100)}% done.')
         await asyncio.sleep(1)  # Pause for 1 second between queries
         articles = await newsapi_search_news(query, api_key)
         for article in articles:

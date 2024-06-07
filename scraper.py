@@ -34,22 +34,26 @@ class Scraper:
 
     @classmethod
     def transform_url(cls, url_str):
-        try:
-            r = requests.get(url_str, timeout=10)
-            if r.status_code != 404:
-                return cls(url_str)
-        except:
-            pass
-        
-        url = unquote(url_str).replace(" ", "%20")
-        if not re.match(r"http", url):
-            url = "https://" + url.lstrip("www.")
-        try:
-            r = requests.get(url, timeout=10)
-            if r.status_code != 404:
-                return cls(url)
-        except:
-            pass
+        def is_valid_url(url):
+            try:
+                response = requests.get(url, timeout=10)
+                return response.status_code != 404
+            except requests.RequestException:
+                return False
+
+        def fix_url(url):
+            url = unquote(url).replace(" ", "%20")
+            if not re.match(r"http", url):
+                url = "https://" + url.lstrip("www.")
+            return url
+
+        if is_valid_url(url_str):
+            return cls(url_str)
+
+        url = fix_url(url_str)
+        if is_valid_url(url):
+            return cls(url)
+
         return ["Invalid URL.", "", "", "", 0, url_str]
 
     def useragent_generator(self):
@@ -195,6 +199,7 @@ class Scraper:
             self.image = ''
 
         text_p = (''.join(s.findAll(text=True)) for s in soup.findAll('p'))
+        self.reading = text_p
         c_p = Counter((x.rstrip(punctuation).lower() for y in text_p for x in y.split()))
         self.word_count = sum(c_p.values())
 
