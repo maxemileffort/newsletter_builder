@@ -1,7 +1,7 @@
 from openai import OpenAI
 import pandas as pd
 from dotenv import load_dotenv
-import glob, os, sys
+import glob, os, re, sys
 from datetime import datetime
 import concurrent.futures
 
@@ -41,8 +41,8 @@ def score_summary(summary):
         ],
         max_tokens=max_tokens
     )
-    score = int(trends_response.choices[0].message.content.strip().replace('.', ''))
-    scores['Relevance to Current Trends'] = score
+    score = trends_response.choices[0].message.content.strip().replace('.', '')
+    scores['Relevance to Current Trends'] = int(re.sub(r'[^0-9\s]', '', score))
     
     # Innovation Level
     innovation_prompt = f"Evaluate the novelty of the technology or development discussed in the summary. Rate the innovation level on a scale from 1 to 5, with 5 being highly novel or a breakthrough. Summary: {summary}"
@@ -54,8 +54,8 @@ def score_summary(summary):
         ],
         max_tokens=max_tokens
     )
-    score = int(innovation_response.choices[0].message.content.strip().replace('.', ''))
-    scores['Innovation Level'] = score
+    score = (innovation_response.choices[0].message.content.strip().replace('.', ''))
+    scores['Innovation Level'] = int(re.sub(r'[^0-9\s]', '', score))
     
     # Practical Application
     application_prompt = f"Assess how the contents of the summary can be applied in real-world scenarios or projects. Rate the practical application on a scale from 1 to 5. Summary: {summary}"
@@ -67,8 +67,8 @@ def score_summary(summary):
         ],
         max_tokens=max_tokens
     )
-    score = int(application_response.choices[0].message.content.strip().replace('.', ''))
-    scores['Practical Application'] = score
+    score = (application_response.choices[0].message.content.strip().replace('.', ''))
+    scores['Practical Application'] = int(re.sub(r'[^0-9\s]', '', score))
     
     # Reader Engagement Indicators
     engagement_prompt = f"Review any available engagement data (comments, shares, likes) from social media or websites for the article summarized. Rate the engagement level on a scale from 1 to 5. Summary: {summary}"
@@ -80,8 +80,8 @@ def score_summary(summary):
         ],
         max_tokens=max_tokens
     )
-    score = int(engagement_response.choices[0].message.content.strip().replace('.', ''))
-    scores['Reader Engagement Indicators'] = score
+    score = (engagement_response.choices[0].message.content.strip().replace('.', ''))
+    scores['Reader Engagement Indicators'] = int(re.sub(r'[^0-9\s]', '', score))
     
     # Expert Opinions
     opinions_prompt = f"Check for and include any expert opinions or analyses related to the article. Rate the impact of these opinions on a scale from 1 to 5. Summary: {summary}"
@@ -93,8 +93,8 @@ def score_summary(summary):
         ],
         max_tokens=max_tokens
     )
-    score = int(opinions_response.choices[0].message.content.strip().replace('.', ''))
-    scores['Expert Opinions'] = score
+    score = (opinions_response.choices[0].message.content.strip().replace('.', ''))
+    scores['Expert Opinions'] = int(re.sub(r'[^0-9\s]', '', score))
 
     # Industry
     industry_prompt = f"Categorize the following summary as related to one of the 4 following industries: \n1. Tech News\n2. AI\n3. Web Development\n4. Big Data / DevOps\nThe response should only contain the name of the industry.\n\nSummary: {summary}"
@@ -154,7 +154,7 @@ def summarize_and_score():
     # Convert to DataFrame and save the results
     formatted_date = datetime.now().strftime('%y-%m-%d')
     results_df = pd.DataFrame(summaries_and_scores)
-    results_df.to_csv(f'{formatted_date}_scores.csv', index=False)
+    results_df.to_csv(f'{formatted_date}_scores.csv', index=False, sep="|")
 
 if __name__ == "__main__":
     summarize_and_score()
